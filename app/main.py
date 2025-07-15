@@ -4,9 +4,9 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain_community.vectorstores import FAISS
 import os
 from langchain_openai import ChatOpenAI
-from langchain.memory import VectorStoreRetrieverMemory
 from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
 from langchain.schema import Document
+from langchain.memory import ConversationBufferMemory
 
 load_dotenv()
 openai_api_key = os.getenv('OPENAI_API_KEY') # getting the key from .env file
@@ -19,19 +19,24 @@ retriever = db.as_retriever() # turns memory into search engine
 
 reasoning_template = ChatPromptTemplate.from_messages([
     SystemMessagePromptTemplate.from_template(
-        'You are a detail-oriented AI assistant that reads different documents. Please think step-by-step and explain your reasoning.'
+        "You are a thoughtful AI assistant. When you answer a question, always think step by step, explain each step clearly, and reason out loud before giving the final answer."
     ),
     HumanMessagePromptTemplate.from_template(
         'Here is the context:\n{context}\n\nAnswer this question:\n{question}'
     )
 ])
 
-memory = VectorStoreRetrieverMemory(retriever=retriever) # recalls past answers and questions and stores in DB
+# CREATING SHORT-TERM MEMORY 
+
+short_memory = ConversationBufferMemory(
+    memory_key='chat_history',
+    return_messages=True
+) # recalls past answers and questions and stores in DB
 
 qa_chain = ConversationalRetrievalChain.from_llm(
     llm=llm,
     retriever=retriever,
-    memory=memory,
+    memory=short_memory,
     combine_docs_chain_kwargs={'prompt': reasoning_template}
 )
 
@@ -42,7 +47,8 @@ try:
     long_term_memory = FAISS.load_local(
         'long_term_memory', embeddings=embeddings, allow_dangerous_deserialization=True) #loading faiss_index
 except:
-    long_term_memory = FAISS.from_documents([], embeddings) #creates new if none
+    dummy = Document(page_content='Initialise FAISS doc', metadata={})
+    long_term_memory = FAISS.from_documents([dummy], embeddings) #creates new if none
 
 
 while True: # to keep asking question forever
