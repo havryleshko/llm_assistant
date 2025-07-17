@@ -1,6 +1,10 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+from llm_assistant import main
+from main import core_components
+from langchain.memory import ConversationBufferMemory
+from langchain.chains import ConversationalRetrievalChain
 
 app = FastAPI()
 
@@ -14,11 +18,24 @@ app.add_middleware(
 
 class Question(BaseModel): # to validate requests
     question: str #str because user asks question in text form
+    chat_id: str # to track memory per user 
 
-@app.get('/')
-async def root(): # async to handle many requests
-    return {'message': 'API working'}
+llm, retriever, reasoning_template = core_components() # unpacking core_components
+memory_store = {} # for chat_id -> creating empty dict to store memory objects
 
-@app.post('/ask') #test 
+def get_memory(chat_id): # takes key from dict
+    if chat_id not in memory_store:
+        memory_store[chat_id] = ConversationBufferMemory(memory_key='chat_history', return_messages=True)
+    return memory_store[chat_id]
+
+@app.post('/ask')
 async def ask_q(q: Question):
-    return {'answer': q.question}
+    user_memory = get_memory(q.chat_id)
+    qa_chain = ConversationalRetrievalChain.from_llm(
+        llm=llm,
+        retriever=retriever,
+        memory=user_memory,
+        combine_docs_chain_kwargs={'prompt': reasoning_template}
+    )
+    answer = qa_chain.run(q.question)
+    return {'answer': answer}
