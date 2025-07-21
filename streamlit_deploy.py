@@ -5,6 +5,7 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import ConversationBufferMemory
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.callbacks.base import BaseCallbackHandler
+from api import Question
 
 if 'chat_history' not in st.session_state:
     st.session_state.chat_history = [] # if ther is no history, create empty listt
@@ -56,6 +57,7 @@ if inp: #trigerring chat response
                 return super().on_llm_new_token(token, **kwargs)
                 
         with st.spinner('Reasoning...'): # loading animation
-            answer = ask_q(inp, callbacks=[StreamHandler(r_container)]) # calling ASK_Q function from API module
+            chat_id = st.session_state.name
+            answer = ask_q(Question(question=inp, chat_id=chat_id), callbacks=[StreamHandler(r_container)]) # calling ASK_Q function from API module
             st.markdown(answer) # returning result
     st.session_state.chat_history.append({'role': 'assistant', 'content': answer}) # saving ASSISTANT's response to chat history
