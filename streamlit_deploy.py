@@ -16,7 +16,7 @@ memory = ConversationBufferMemory(
     return_messages=True
 )
 
-qa_chain = ConversationalRetrievalChain(
+qa_chain = ConversationalRetrievalChain.from_llm(
     llm=llm,
     retriever=retriever,
     memory=memory,
@@ -34,7 +34,7 @@ if 'name' not in st.session_state:
     st.session_state.name = st.text_input("What's your name?")
     st.stop()
 
-upload = st.file_uploader("Choose the doc") # for uploading own docs
+upload = st.file_uploader("Choose the doc") # for uploading own docss
 
 inp = st.chat_input(f'What do you want to know, {st.session_state.name}?')
 if inp: #trigerring chat response
