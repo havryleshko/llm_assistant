@@ -4,7 +4,7 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain_community.vectorstores import FAISS
 import os
 from langchain_openai import ChatOpenAI
-from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
+from langchain_core.prompts import PromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
 from langchain.schema import Document
 from langchain.memory import ConversationBufferMemory
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
@@ -19,7 +19,7 @@ def core_components():
     llm = ChatOpenAI(openai_api_key=openai_api_key, model='gpt-4o', streaming=True, callbacks=[StreamingStdOutCallbackHandler()]) # setting up llm model for reasonin, additionally adding streaming
     retriever = db.as_retriever() # turns memory into search engine
 
-    reasoning_template = ChatPromptTemplate.from_messages([
+    reasoning_template = PromptTemplate.from_messages([
         SystemMessagePromptTemplate.from_template(
             """You are a thoughtful AI assistant. When you answer a question, always think step by step, explain each step clearly, and reason out loud before giving the final answer.
             Use both the user's chat history and retrieved documents to answer the question. Use chain-of-thought reasoning. Be logical, but give answer in a human-like manner.
@@ -38,6 +38,7 @@ def long_term_m():
         llm=llm,
         retriever=retriever,
         memory=memory,
+
         combine_docs_chain_kwargs={'prompt': reasoning_template}
     )
 #CREATING LONG-TERM MEMORY

@@ -39,20 +39,23 @@ upload = st.file_uploader("Choose the doc") # for uploading own docs
 inp = st.chat_input(f'What do you want to know, {st.session_state.name}?')
 if inp: #trigerring chat response
     st.chat_message('user').markdown(inp) # show user input
-    st.session_state.messages.append({'role': 'user', 'content': inp}) # adding new message to the list that stores converstion
+    st.session_state.chat_history.append({'role': 'user', 'content': inp}) # adding new message to the list that stores converstion
     with st.chat_message('AI'):
         r_container = st.empty() # this creates container for streaming; it is space that streaming will gradually be filling up: for showing on page
 
         partial = '' #each answer will begin from empty string and then grow in it, every time from strach; for scratching before showing
 
         class StreamHandler(BaseCallbackHandler):
-            def on_llm_new_token(self, token=str, *, chunk = None, parent_run_id = None, **kwargs):
-                
-                partial += token
-                r_container.markdown(partial)
-                return super().on_llm_new_token(token, chunk=chunk, parent_run_id=parent_run_id, **kwargs)
+            def __init__(self, container):
+                self.container = container
+                self.partial = ""
+
+            def on_llm_new_token(self, token: str, **kwargs):
+                self.partial += token
+                self.container.markdown(partial)
+                return super().on_llm_new_token(token, **kwargs)
                 
         with st.spinner('Reasoning...'): # loading animation
-            answer = ask_q(inp) # calling ASK_Q function from API module
+            answer = ask_q(inp, callbacks=[StreamHandler(r_container)]) # calling ASK_Q function from API module
             st.markdown(answer) # returning result
     st.session_state.messages.append({'role': 'assistant', 'content': answer}) # saving ASSISTANT's response to chat history

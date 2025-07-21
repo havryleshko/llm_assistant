@@ -28,7 +28,7 @@ def get_memory(chat_id): # takes key from dict
     return memory_store[chat_id]
 
 @app.post('/ask')
-async def ask_q(q: Question):
+async def ask_q(q: Question, callbacks=None):
     user_memory = get_memory(q.chat_id)
     qa_chain = ConversationalRetrievalChain.from_llm(
         llm=llm,
