@@ -3,3 +3,7 @@ openai
 faiss-cpu
 python-dotenv
 PyMuPDF
+streamlit
+pydantic
+
+
