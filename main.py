@@ -38,7 +38,6 @@ def long_term_m():
         llm=llm,
         retriever=retriever,
         memory=memory,
-
         combine_docs_chain_kwargs={'prompt': reasoning_template}
     )
 #CREATING LONG-TERM MEMORY
