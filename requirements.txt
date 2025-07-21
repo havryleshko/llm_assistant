@@ -5,5 +5,10 @@ python-dotenv
 PyMuPDF
 streamlit
 pydantic
+fastapi
+uvicorn
+langchain-openai
+langchain-community
+langchain-core
 
 
