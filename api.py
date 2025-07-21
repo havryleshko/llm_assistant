@@ -19,7 +19,7 @@ class Question(BaseModel): # to validate requests
     question: str #str because user asks question in text form
     chat_id: str # to track memory per user 
 
-llm, retriever, reasoning_template = core_components() # unpacking core_components
+llm, retriever, reasoning_template, embeddings, db = core_components() # unpacking core_components
 memory_store = {} # for chat_id -> creating empty dict to store memory objects
 
 def get_memory(chat_id): # takes key from dict
