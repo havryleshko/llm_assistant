@@ -58,4 +58,4 @@ if inp: #trigerring chat response
         with st.spinner('Reasoning...'): # loading animation
             answer = ask_q(inp, callbacks=[StreamHandler(r_container)]) # calling ASK_Q function from API module
             st.markdown(answer) # returning result
-    st.session_state.messages.append({'role': 'assistant', 'content': answer}) # saving ASSISTANT's response to chat history
+    st.session_state.chat_history.append({'role': 'assistant', 'content': answer}) # saving ASSISTANT's response to chat history
