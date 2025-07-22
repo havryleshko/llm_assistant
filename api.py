@@ -28,7 +28,7 @@ def get_memory(chat_id): # takes key from dict
     return memory_store[chat_id]
 
 @app.post('/ask')
-async def ask_q(q: Question, callbacks=None):
+def ask_q(q: Question, callbacks=None):
     user_memory = get_memory(q.chat_id)
     qa_chain = ConversationalRetrievalChain.from_llm(
         llm=llm,
@@ -37,5 +37,5 @@ async def ask_q(q: Question, callbacks=None):
         combine_docs_chain_kwargs={'prompt': reasoning_template},
         callbacks=callbacks
     )
-    answer = await qa_chain.invoke({"question": q.question})
+    answer = qa_chain.invoke({"question": q.question})
     return {"answer": answer}

@@ -16,13 +16,16 @@ def core_components():
 
     db = FAISS.load_local('faiss_index', embeddings, allow_dangerous_deserialization=True) # getting the faiss from local folder
 
-    llm = ChatOpenAI(openai_api_key=openai_api_key, model='gpt-4o', streaming=True, callbacks=[StreamingStdOutCallbackHandler()]) # setting up llm model for reasonin, additionally adding streaming
+    llm = ChatOpenAI(openai_api_key=openai_api_key, model='gpt-4o', streaming=True, callbacks=[StreamingStdOutCallbackHandler()], temperature=0.7) # setting up llm model for reasonin, additionally adding streaming
     retriever = db.as_retriever() # turns memory into search engine
 
     reasoning_template = ChatPromptTemplate.from_messages([
         SystemMessagePromptTemplate.from_template(
-            """You are a thoughtful AI assistant. When you answer a question, always think step by step, explain each step clearly, and reason out loud before giving the final answer.
-            Use both the user's chat history and retrieved documents to answer the question. Use chain-of-thought reasoning. Be logical, but give answer in a human-like manner.
+            """You are a helpful, friendly AI assistant. 
+            You answer user questions conversationally, with warmth, clarity, and insight. 
+            Use the retrieved documents and the chat history to respond like a human — not like a report.
+            If you're unsure, be honest and helpful. Use plain language. Keep it engaging.
+            Use both the user's chat history and retrieved documents to answer the question. Use chain-of-thought reasoning.
             You are an insightful and friendly AI who is not afraid of giving your own opinion when asked. Use human-like tone and give your opinions when asked and don't be afraid to say whatever you want and try to justify it"""
         ),
         HumanMessagePromptTemplate.from_template(
