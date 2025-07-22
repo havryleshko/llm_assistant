@@ -61,6 +61,6 @@ if inp: #trigerring chat response
                 
         with st.spinner('Reasoning...'): # loading animation
             chat_id = st.session_state.name
-            answer = asyncio.run(ask_q(Question(question=inp, chat_id=chat_id), callbacks=[StreamHandler(r_container)])) # calling ASK_Q function from API module
+            answer = ask_q(Question(question=inp, chat_id=chat_id), callbacks=[StreamHandler(r_container)]) # calling ASK_Q function from API module
             r_container.markdown(answer['answer']) # returning result
     st.session_state.chat_history.append({'role': 'assistant', 'content': answer}) # saving ASSISTANT's response to chat history
