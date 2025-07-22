@@ -37,5 +37,5 @@ def ask_q(q: Question, callbacks=None):
         combine_docs_chain_kwargs={'prompt': reasoning_template},
         callbacks=callbacks
     )
-    answer = qa_chain.run(q.question)
+    answer = qa_chain.run({'question': q.question})
     return answer
