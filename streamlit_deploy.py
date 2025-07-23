@@ -1,12 +1,12 @@
 import streamlit as st
 from api import ask_q
 from main import core_components
+from ingest import ingest
 from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import ConversationBufferMemory
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.callbacks.base import BaseCallbackHandler
 from api import Question
-import asyncio
 
 if 'chat_history' not in st.session_state:
     st.session_state.chat_history = [] # if ther is no history, create empty listt
@@ -36,7 +36,15 @@ if 'name' not in st.session_state:
     st.session_state.name = st.text_input("What's your name?")
     st.stop()
 
+
 upload = st.file_uploader("Choose the doc") # for uploading own docss
+
+if upload is not None: # checks if the file has been uploaded
+    with ('temporary_upload', 'wb') as f: # as PDF and .xsl files are binary (not text), creating a temporary file 
+        f.write(upload.get())
+
+    ingest('temporary_upload')
+    st.success('Everything is fine, ask me questions')
 
 inp = st.chat_input(f'What do you want to know, {st.session_state.name}?')
 if inp: #trigerring chat response
