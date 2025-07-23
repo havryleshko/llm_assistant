@@ -1,3 +1,18 @@
+## Who is this AI for?
+**- For people involved in finance, investing in assets long- & short- term to better understand financial health**
+
+## What ***one workflow*** does this AI automate?
+**- Manual financial risk analysis of 10-K reports**
+
+## What does it do *better* than ChatGPT?
+**1. Remembers you and your documents**
+
+**2. Gives precise answers from your files, not generic**
+
+**3. Works faster for your one use case**
+
+**4. Prompted to be your own financial research analyst**
+
 ### LLM Assistant
 Personal AI document assistant built with LangChain, OpenAI, FastAPI, and Streamlit
 
