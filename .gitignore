@@ -1,1 +1,14 @@
 .env
+
+.venv/
+env/
+venv/
+__pycache__/
+*.py[cod]
+*.ipynb_checkpoints/
+*.log
+*.csv
+*.xlsx
+*.xls
+*.pkl
+*.tmp
