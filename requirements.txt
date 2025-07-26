@@ -2,7 +2,6 @@ langchain
 openai
 faiss-cpu
 python-dotenv
-pymupdf
 streamlit
 pydantic
 fastapi
@@ -10,5 +9,8 @@ uvicorn
 langchain-openai
 langchain-community
 langchain-core
+pymupdf
+openpyxl
+pandas
 
 
