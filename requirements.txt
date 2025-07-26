@@ -2,7 +2,7 @@ langchain
 openai
 faiss-cpu
 python-dotenv
-PyMuPDF
+pymupdf
 streamlit
 pydantic
 fastapi
