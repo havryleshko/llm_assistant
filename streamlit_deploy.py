@@ -9,6 +9,7 @@ from langchain.memory import ConversationBufferMemory
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.callbacks.base import BaseCallbackHandler
 from api import Question
+import os
 
 if 'chat_history' not in st.session_state:
     st.session_state.chat_history = [] # if ther is no history, create empty listt
@@ -42,10 +43,12 @@ if 'name' not in st.session_state:
 upload = st.file_uploader("Choose the doc") # for uploading own docss
 
 if upload is not None: # checks if the file has been uploaded
-    with open('temporary_upload', 'wb') as f: # as PDF and .xsl files are binary (not text), creating a temporary file 
+    ext = os.path.splitext(upload.name)[-1].lower()
+    temp_path = f"temporary_upload{ext}"
+    with open(temp_path, 'wb') as f: # as PDF and .xsl files are binary (not text), creating a temporary file 
         f.write(upload.read())
 
-    ingest('temporary_upload')
+    ingest(temp_path)
     st.success('Everything is fine, ask me questions')
 
 inp = st.chat_input(f'What do you want to know, {st.session_state.name}?')
