@@ -1,3 +1,5 @@
+### INTERFFACE
+
 import streamlit as st
 from api import ask_q
 from main import core_components
@@ -40,7 +42,7 @@ if 'name' not in st.session_state:
 upload = st.file_uploader("Choose the doc") # for uploading own docss
 
 if upload is not None: # checks if the file has been uploaded
-    with ('temporary_upload', 'wb') as f: # as PDF and .xsl files are binary (not text), creating a temporary file 
+    with open('temporary_upload', 'wb') as f: # as PDF and .xsl files are binary (not text), creating a temporary file 
         f.write(upload.get())
 
     ingest('temporary_upload')
