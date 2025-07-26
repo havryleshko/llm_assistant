@@ -43,7 +43,7 @@ upload = st.file_uploader("Choose the doc") # for uploading own docss
 
 if upload is not None: # checks if the file has been uploaded
     with open('temporary_upload', 'wb') as f: # as PDF and .xsl files are binary (not text), creating a temporary file 
-        f.write(upload.get())
+        f.write(upload.read())
 
     ingest('temporary_upload')
     st.success('Everything is fine, ask me questions')
